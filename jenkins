@@ -1,36 +1,46 @@
-pipeline{
-agent any
-tools{
-maven 'maven'
-}
-stages{
-stage('checkout'){
-    steps{
-        git branch: 'master',url:'https://github.com/prajwalknaik/m1.git'
-  }
-}
-stage('build'){
-    steps{
-        sh 'mvn compile'
-  }
-}
-stage('test'){
-    steps{
-        sh 'mvn test'
-  }
-}
-stage('run application'){
-    steps{
-        sh 'java -jar target/jarfile.jar'
+pipeline {
+    agent any
+    
+    tools {
+        maven 'maven'
+    } // <-- Added missing closing brace for tools
+
+    stages {
+        stage('checkout') {
+            steps {
+                git branch: 'master', url: 'https://github.com/prajwalknaik/m1.git'
+            }
+        }
+        
+        stage('build') {
+            steps {
+                // Note: 'mvn compile' only compiles source code. 
+                // If you want to generate the JAR file for the run stage, 
+                // you should use 'mvn package' instead.
+                sh 'mvn package' 
+            }
+        }
+        
+        stage('test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        
+        stage('run application') {
+            steps {
+                // Replace 'jarfile.jar' with your actual generated JAR filename
+                sh 'java -jar target/jarfile.jar'
+            }
+        }
+    } // <-- Added missing closing brace for stages
+
+    post {
+        success {
+            echo 'build and deployment successful'
+        }
+        failure {
+            echo 'build failed'
+        }
     }
-  }
-}
-post{
-    success{
-          echo 'build and deployment successfull'
-}
-    failure{
-          echo 'build failed'
-    }
-  }
 }
