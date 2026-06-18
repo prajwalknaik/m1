@@ -1,0 +1,36 @@
+pipeline{
+agent any
+tools{
+maven 'maven'
+}
+stages{
+stage('checkout'){
+    steps{
+        git branch: 'master',url:'https://github.com/prajwalknaik/m1.git'
+  }
+}
+stage('build'){
+    steps{
+        sh 'mvn compile'
+  }
+}
+stage('test'){
+    steps{
+        sh 'mvn test'
+  }
+}
+stage('run application'){
+    steps{
+        sh 'java-jar target/jarfile.jar'
+    }
+  }
+}
+post{
+    success{
+          echo 'build and deployment successfull'
+}
+    failure{
+          echo 'build failed'
+    }
+  }
+}
