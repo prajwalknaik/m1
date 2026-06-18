@@ -21,7 +21,7 @@ stage('test'){
 }
 stage('run application'){
     steps{
-        sh 'java-jar target/jarfile.jar'
+        sh 'java -jar target/jarfile.jar'
     }
   }
 }
